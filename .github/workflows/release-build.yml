@@ -48,13 +48,18 @@ jobs:
 
       - name: Configure signing
         if: ${{ env.KEYSTORE_BASE64 != '' }}
+        # Secrets are passed via env (never interpolated into the script) and written with
+        # printf so passwords containing shell metacharacters (`, $, ") are handled safely.
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > app/keystore.jks
-          cat > app/signing.properties <<EOF
-          KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
-          STORE_FILE=keystore.jks
-          EOF
+          {
+            printf 'KEY_ALIAS=%s\n' "$KEY_ALIAS"
+            printf 'KEY_PASSWORD=%s\n' "$KEY_PASSWORD"
+            printf 'STORE_FILE=%s\n' 'keystore.jks'
+          } > app/signing.properties
           echo "Signing configured: release APK will be signed."
 
       - name: Warn about unsigned build
