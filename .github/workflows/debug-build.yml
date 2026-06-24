@@ -1,8 +1,5 @@
 name: Build Debug APK
 
-# Builds an installable debug APK on every push and pull request.
-# Debug builds are signed with the committed AOSP test key, so no secrets are needed.
-
 on:
   push:
     branches: ['**']
@@ -16,7 +13,6 @@ on:
 permissions:
   contents: read
 
-# Cancel superseded runs on the same ref to save CI minutes.
 concurrency:
   group: debug-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
