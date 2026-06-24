@@ -1,13 +1,5 @@
 name: Build Release APK
 
-# Manually triggered ("Run workflow" button on the Actions tab) release build.
-#
-# Signing (optional): add these repository secrets to get a signed APK, otherwise
-# an unsigned release APK is produced.
-#   KEYSTORE_BASE64 - base64 of your keystore: `base64 -w0 keystore.jks`
-#   KEY_ALIAS       - key alias
-#   KEY_PASSWORD    - key (and store) password; build.gradle.kts reuses it for both
-
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +13,7 @@ on:
         default: ''
 
 permissions:
-  contents: write # required to create the GitHub Release
+  contents: write
 
 concurrency:
   group: release-${{ github.ref }}
@@ -48,8 +40,6 @@ jobs:
 
       - name: Configure signing
         if: ${{ env.KEYSTORE_BASE64 != '' }}
-        # Secrets are passed via env (never interpolated into the script) and written with
-        # printf so passwords containing shell metacharacters (`, $, ") are handled safely.
         env:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
