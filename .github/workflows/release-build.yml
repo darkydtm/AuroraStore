@@ -45,9 +45,12 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > app/keystore.jks
+          # escape backslashes for the java .properties format
+          KEY_ALIAS_ESC=${KEY_ALIAS//\\/\\\\}
+          KEY_PASSWORD_ESC=${KEY_PASSWORD//\\/\\\\}
           {
-            printf 'KEY_ALIAS=%s\n' "$KEY_ALIAS"
-            printf 'KEY_PASSWORD=%s\n' "$KEY_PASSWORD"
+            printf 'KEY_ALIAS=%s\n' "$KEY_ALIAS_ESC"
+            printf 'KEY_PASSWORD=%s\n' "$KEY_PASSWORD_ESC"
             printf 'STORE_FILE=%s\n' 'keystore.jks'
           } > app/signing.properties
           echo "Signing configured: release APK will be signed."
