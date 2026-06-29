@@ -50,6 +50,11 @@ app/preload/*
 #Exclude signing configurations & keystore
 signing.properties
 *.keystore
+aurora-release.jks
+aurora-release-2.jks
+keystore.jks
+keystore.b64
 
 
 .kotlin/*
+aurora-upload.jks
