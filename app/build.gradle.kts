@@ -79,10 +79,10 @@ configure<ApplicationExtension> {
     }
 
     signingConfigs {
-        if (File("signing.properties").exists()) {
+        if (file("signing.properties").exists()) {
             create("release") {
                 val properties = Properties().apply {
-                    File("signing.properties").inputStream().use { load(it) }
+                    file("signing.properties").inputStream().use { load(it) }
                 }
 
                 keyAlias = properties["KEY_ALIAS"] as String
@@ -109,7 +109,7 @@ configure<ApplicationExtension> {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (File("signing.properties").exists()) {
+            if (file("signing.properties").exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
